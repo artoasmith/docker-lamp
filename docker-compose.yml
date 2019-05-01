@@ -1,0 +1,51 @@
+version: '3'
+services:
+    apache:
+        build: .docker/apache
+        container_name: amp_apache
+        ports:
+          - 8000:80
+        volumes:
+          - .docker/config/vhosts:/etc/apache2/sites-enabled
+          - .:/home/wwwroot/amp
+        depends_on:
+          - php
+
+    mysql:
+        image: mysql
+        command: "--default-authentication-plugin=mysql_native_password"
+        container_name: amp_mysql
+        volumes:
+            - .docker/data/db:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: amp
+            MYSQL_USER: amp
+            MYSQL_PASSWORD: amp
+    php:
+        build: .docker/php
+        container_name: amp_php
+        volumes:
+          - .:/home/wwwroot/amp
+        environment:
+          - maildev_host=amp_maildev
+        depends_on:
+          - maildev
+          - mysql
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: amp_phpmyadmin
+        environment:
+          PMA_HOST: mysql
+          PMA_PORT: 3306
+        ports:
+            - 8080:80
+        links:
+            - mysql
+
+    maildev:
+        image: djfarrelly/maildev
+        container_name: amp_maildev
+        ports:
+          - 8001:80
