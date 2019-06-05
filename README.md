@@ -5,17 +5,17 @@
 - MySQL
 - MailDev
 
-####Configuration
+#### Configuration
 Php project location in `source` folder.
 Web document root `source/public` can be changed in `.docker/config/vhosts/source.conf` file, by `docrootweb` parameter
 
-####Initialization
+#### Initialization
 > docker-compose build
 
 At this moment, Docker will execute all configurations that we set up. When it’s done, you can launch your containers !
 > docker-compose up -d
 
-####Usage
+#### Usage
 Connect to mysql container via bash
 
 > docker exec -it amp_mysql bash
